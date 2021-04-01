@@ -1,14 +1,15 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.AuthRequest;
-import com.example.demo.model.AuthResponse;
+import com.example.demo.dto.AuthRequest;
+import com.example.demo.dto.AuthResponse;
+import com.example.demo.dto.CarDto;
+import com.example.demo.mapper.CarMapper;
+import com.example.demo.model.Car;
+import com.example.demo.model.CarType;
 import com.example.demo.service.MyUserDetailsService;
 import com.example.demo.util.JwtUtil;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Contact;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.info.License;
-import io.swagger.v3.oas.annotations.servers.Server;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,16 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@OpenAPIDefinition(
-  servers = { @Server(url = "http://localhost:8080") },
-  info = @Info(
-    title = "Sample Spring Boot API",
-    version = "v1",
-    description = "A demo project using Spring Boot with Swagger-UI enabled",
-    license = @License(name = "MIT License", url = "https://github.com/bchen04/springboot-swagger-rest-api/blob/master/LICENSE"),
-    contact = @Contact(url = "https://www.linkedin.com/in/bchen04/", name = "Ben Chen")
-  )
-)
 class HelloController {
 
   private final AuthenticationManager authenticationManager;
@@ -43,8 +34,12 @@ class HelloController {
   }
 
   @GetMapping("/hello")
-  String hello() {
-    return "Hola mundo";
+  @Operation(summary = "My endpoint", security = @SecurityRequirement(name = "bearerAuth"))
+  ResponseEntity<CarDto> hello() {
+    Car car = new Car("Morris", 5, CarType.SEDAN);
+    CarDto carDto = CarMapper.INSTANCE.carToCarDto(car);
+
+    return ResponseEntity.ok(carDto);
   }
 
   @PostMapping("/auth")
