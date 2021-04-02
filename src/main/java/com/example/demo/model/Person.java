@@ -1,13 +1,17 @@
 package com.example.demo.model;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.*;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 @Node
+@Data
+@NoArgsConstructor
 public class Person {
 
   @Id
@@ -15,17 +19,20 @@ public class Person {
   private Long id;
 
   private String name;
+  private long createdAt;
+  private long updatedAt;
+  private long deletedAt;
 
   @Relationship(type = "TEAMMATE", direction = Relationship.Direction.INCOMING)
-  public Set<Person> teammates;
+  private Set<Person> teammates;
 
   @Relationship(type = "HAS", direction = Relationship.Direction.OUTGOING)
   public Set<Car> cars;
 
-  public Person() {}
-
   public Person(String name) {
     this.name = name;
+    this.createdAt = new Date().getTime();
+    this.updatedAt = new Date().getTime();
   }
 
   public void worksWith(Person person) {
@@ -40,26 +47,5 @@ public class Person {
       cars = new HashSet<>();
     }
     cars.add(car);
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  @Override
-  public String toString() {
-    return "Persona{" + "id=" + id + ", name='" + name + '\'' + ", teammates=" + teammates + ", cars=" + cars + '}';
   }
 }

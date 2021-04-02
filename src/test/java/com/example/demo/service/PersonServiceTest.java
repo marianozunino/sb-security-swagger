@@ -6,6 +6,8 @@ import com.example.demo.model.Person;
 import com.example.demo.repository.PersonRepository;
 import java.util.stream.Collectors;
 import org.jeasy.random.EasyRandom;
+import org.jeasy.random.EasyRandomParameters;
+import org.jeasy.random.FieldPredicates;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,6 +44,8 @@ public class PersonServiceTest {
 
   @Test
   public void shouldListPersons() {
+    EasyRandomParameters parameters = new EasyRandomParameters().excludeField(FieldPredicates.named("teammates"));
+    var ezRandom = new EasyRandom(parameters);
     var persons = ezRandom.objects(Person.class, 5).collect(Collectors.toList());
     Mockito.when(personRepository.findAll()).thenReturn(persons);
     var result = personService.listPersons();

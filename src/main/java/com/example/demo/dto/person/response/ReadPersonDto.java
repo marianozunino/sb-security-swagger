@@ -1,16 +1,14 @@
 package com.example.demo.dto.person.response;
 
+import java.util.Date;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
 public class ReadPersonDto {
 
   private String name;
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public ReadPersonDto() {}
+  private Date createdAt;
+  private Date updatedAt;
 }
