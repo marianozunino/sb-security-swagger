@@ -6,6 +6,7 @@ import com.example.demo.service.PersonService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ public class PersonController {
 
   @PostMapping
   @Operation(summary = "Este endpoint crea y retorna una persona")
-  ResponseEntity<ReadPersonDto> createPerson(@RequestBody CreatePersonDto createPersonDto) {
+  ResponseEntity<ReadPersonDto> createPerson(@RequestBody @Valid CreatePersonDto createPersonDto) {
     var persistedPerson = this.personService.createPerson(createPersonDto);
     return ResponseEntity.ok(persistedPerson);
   }
