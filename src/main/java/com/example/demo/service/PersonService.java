@@ -6,8 +6,6 @@ import com.example.demo.mapper.PersonMapper;
 import com.example.demo.repository.PersonRepository;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,8 +22,6 @@ public class PersonService {
   public ReadPersonDto createPerson(CreatePersonDto createPersonDto) {
     var a = this.personMapper.createPersonDtoToPerson(createPersonDto);
     var b = this.personRepository.save(a);
-    Pageable firstPageWithTwoElements = PageRequest.of(0, 2);
-    this.personRepository.findAll(firstPageWithTwoElements);
     return this.personMapper.personToReadPersonDto(b);
   }
 

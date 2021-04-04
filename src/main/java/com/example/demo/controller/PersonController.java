@@ -2,18 +2,22 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.person.request.CreatePersonDto;
 import com.example.demo.dto.person.response.ReadPersonDto;
+import com.example.demo.model.UserContext;
 import com.example.demo.service.PersonService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("persons")
-@SecurityRequirement(name = "bearerAuth")
+//@SecurityRequirement(name = "bearerAuth") // Requires Auth!!!
 public class PersonController {
+
+  @Resource(name = "requestUserDataContext")
+  private UserContext userContext;
 
   private final PersonService personService;
 

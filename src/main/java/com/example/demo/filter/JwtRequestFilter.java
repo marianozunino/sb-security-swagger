@@ -1,49 +1,40 @@
 package com.example.demo.filter;
 
-import com.example.demo.service.MyUserDetailsService;
 import com.example.demo.util.JwtUtil;
-import java.io.IOException;
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-  final MyUserDetailsService userDetailsService;
-  final JwtUtil jwtUtil;
+  private final JwtUtil jwtUtil;
 
-  public JwtRequestFilter(MyUserDetailsService userDetailsService, JwtUtil jwtUtil) {
-    this.userDetailsService = userDetailsService;
+  public JwtRequestFilter(JwtUtil jwtUtil) {
     this.jwtUtil = jwtUtil;
   }
 
+  @SneakyThrows
   @Override
-  protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)
-    throws ServletException, IOException {
-    final String authHeader = httpServletRequest.getHeader("Authorization");
-    if (authHeader != null && authHeader.startsWith("Bearer ")) {
-      var jwt = authHeader.substring(7);
-      var username = jwtUtil.extractUsername(jwt);
-      if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-        var userDetails = this.userDetailsService.loadUserByUsername(username);
-        if (jwtUtil.validateToken(jwt, userDetails)) {
-          var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-            userDetails,
-            null,
-            userDetails.getAuthorities()
-          );
-          usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-          SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-        }
-      }
+  protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) {
+    var bearer = request.getHeader("Authorization");
+    if (bearer != null && bearer.toLowerCase().startsWith("bearer ")) {
+      var jwt = bearer.substring(7);
+      this.jwtUtil.setAuthContext(jwt);
     }
-    filterChain.doFilter(httpServletRequest, httpServletResponse);
+    filterChain.doFilter(request, response);
+  }
+
+  @Override
+  protected boolean shouldNotFilter(HttpServletRequest request) {
+    return (
+      request.getRequestURI().startsWith("/auth") ||
+      request.getRequestURI().startsWith("/api-docs") ||
+      request.getRequestURI().startsWith("/swagger")
+    );
   }
 }

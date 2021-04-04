@@ -1,40 +1,51 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.auth.request.AuthRequest;
-import com.example.demo.dto.auth.response.AuthResponse;
-import com.example.demo.service.MyUserDetailsService;
-import com.example.demo.util.JwtUtil;
+import com.example.demo.dto.ApiErrorResponse;
+import com.example.demo.dto.auth.response.TokenDto;
+import com.example.demo.exception.ApiException;
+import com.example.demo.service.AuthService;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 class AuthController {
 
-  private final AuthenticationManager authenticationManager;
-  private final MyUserDetailsService userDetailsService;
-  private final JwtUtil jwtUtil;
+  private final AuthService authService;
 
-  public AuthController(AuthenticationManager authenticationManager, MyUserDetailsService userDetailsService, JwtUtil jwtUtil) {
-    this.authenticationManager = authenticationManager;
-    this.userDetailsService = userDetailsService;
-    this.jwtUtil = jwtUtil;
+  AuthController(AuthService authService) {
+    this.authService = authService;
   }
 
   @PostMapping("/auth")
-  ResponseEntity<AuthResponse> auth(@RequestBody AuthRequest authRequest) throws Exception {
-    try {
-      authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-    } catch (BadCredentialsException e) {
-      throw new Exception("Invalid user or password");
+  @ApiResponses(
+    value = {
+      @ApiResponse(
+        responseCode = "404",
+        content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class))
+        }
+      ),
+      @ApiResponse(
+        responseCode = "401",
+        content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class))
+        }
+      )
     }
-    final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
-    final String jwt = jwtUtil.generateToken(userDetails);
-    return ResponseEntity.ok(new AuthResponse(jwt));
+  )
+  ResponseEntity<TokenDto> auth(@RequestHeader("x-firebase-token") String fbToken) throws ApiException {
+    if (fbToken != null && fbToken.toLowerCase().startsWith("bearer ")) {
+      var jwt = fbToken.substring(7);
+      var authResponse = this.authService.login(jwt);
+      return ResponseEntity.ok(authResponse);
+    }
+    throw new ApiException(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED");
   }
 }

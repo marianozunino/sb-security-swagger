@@ -1,5 +1,6 @@
 package com.example.demo.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,7 +13,7 @@ public class ApiErrorResponse {
   private final int statusCode;
   private final String status;
   private final String error;
-  private List<ApiValidationError> subErrors;
+  private List<ApiValidationError> subErrors = new ArrayList<>();
 
   public ApiErrorResponse(HttpStatus status, String error) {
     this.statusCode = status.value();

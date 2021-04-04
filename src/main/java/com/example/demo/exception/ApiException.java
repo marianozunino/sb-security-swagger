@@ -1,13 +1,12 @@
 package com.example.demo.exception;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.http.HttpStatus;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
 public class ApiException extends Exception {
 
+  private static final long serialVersionUID = 1L;
   private HttpStatus status;
   private String error;
 

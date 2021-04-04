@@ -1,8 +1,10 @@
 package com.example.demo;
 
+import com.example.demo.filter.JwtRequestFilter;
 import com.example.demo.model.Car;
 import com.example.demo.model.CarType;
 import com.example.demo.model.Person;
+import com.example.demo.model.UserContext;
 import com.example.demo.repository.CarRepository;
 import com.example.demo.repository.PersonRepository;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -14,7 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.context.annotation.RequestScope;
 
 @SpringBootApplication
 @OpenAPIDefinition(
@@ -27,6 +31,12 @@ public class DemoApplication {
 
   public static void main(String[] args) {
     SpringApplication.run(DemoApplication.class, args);
+  }
+
+  @Bean
+  @RequestScope
+  public UserContext requestUserDataContext() {
+    return new UserContext();
   }
 
   @Bean
