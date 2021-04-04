@@ -8,12 +8,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("persons")
 //@SecurityRequirement(name = "bearerAuth") // Requires Auth!!!
+@Validated
 public class PersonController {
 
   @Resource(name = "requestUserDataContext")
@@ -27,7 +30,7 @@ public class PersonController {
 
   @GetMapping
   @Operation(summary = "Este endpoint lista personas")
-  ResponseEntity<List<ReadPersonDto>> listPersons() {
+  ResponseEntity<List<ReadPersonDto>> listPersons(@RequestParam("age") @Min(5) int age) {
     return ResponseEntity.ok(this.personService.listPersons());
   }
 
