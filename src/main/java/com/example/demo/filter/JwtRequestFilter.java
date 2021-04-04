@@ -20,7 +20,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
   @SneakyThrows
   @Override
-  protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) {
+  protected void doFilterInternal(
+    HttpServletRequest request,
+    @NotNull HttpServletResponse response,
+    @NotNull FilterChain filterChain
+  ) {
     var bearer = request.getHeader("Authorization");
     if (bearer != null && bearer.toLowerCase().startsWith("bearer ")) {
       var jwt = bearer.substring(7);

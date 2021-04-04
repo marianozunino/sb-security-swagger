@@ -28,7 +28,9 @@ public class RestExceptionHandler {
 
   @ExceptionHandler(ApiException.class)
   protected ResponseEntity<ApiErrorResponse> handleApiError(ApiException apiException) {
-    return ResponseEntity.status(apiException.getStatus()).body(new ApiErrorResponse(apiException.getStatus(), apiException.getError()));
+    return ResponseEntity
+      .status(apiException.getStatus())
+      .body(new ApiErrorResponse(apiException.getStatus(), apiException.getError()));
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -41,6 +43,8 @@ public class RestExceptionHandler {
       .map(err -> new ApiValidationError(err.getField(), err.getRejectedValue(), err.getDefaultMessage()))
       .distinct()
       .collect(Collectors.toList());
-    return ResponseEntity.status(BAD_REQUEST).body(new ApiErrorResponse(BAD_REQUEST, "Validation Error", errorMessages));
+    return ResponseEntity
+      .status(BAD_REQUEST)
+      .body(new ApiErrorResponse(BAD_REQUEST, "Validation Error", errorMessages));
   }
 }

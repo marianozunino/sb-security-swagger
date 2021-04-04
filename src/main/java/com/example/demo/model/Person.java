@@ -1,28 +1,20 @@
 package com.example.demo.model;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+@EqualsAndHashCode(callSuper = true)
 @Node
 @Data
 @NoArgsConstructor
-public class Person {
-
-  @Id
-  @GeneratedValue
-  private Long id;
+public class Person extends BaseEntity {
 
   private String name;
-  private long createdAt;
-  private long updatedAt;
-  private long deletedAt;
 
   @Relationship(type = "TEAMMATE", direction = Relationship.Direction.INCOMING)
   private Set<Person> teammates;
@@ -32,8 +24,6 @@ public class Person {
 
   public Person(String name) {
     this.name = name;
-    this.createdAt = new Date().getTime();
-    this.updatedAt = new Date().getTime();
   }
 
   public void worksWith(Person person) {

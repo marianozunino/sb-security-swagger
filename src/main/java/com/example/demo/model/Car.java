@@ -1,19 +1,15 @@
 package com.example.demo.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
+@EqualsAndHashCode(callSuper = true)
 @Node
 @Data
 @NoArgsConstructor
-public class Car {
-
-  @Id
-  @GeneratedValue
-  private Long id;
+public class Car extends BaseEntity {
 
   private String make;
   private int numberOfSeats;

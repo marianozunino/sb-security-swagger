@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import com.example.demo.exception.ApiException;
-import com.example.demo.mapper.PersonMapper;
 import com.example.demo.model.Person;
 import com.example.demo.repository.PersonRepository;
 import com.example.demo.util.JwtUtil;
