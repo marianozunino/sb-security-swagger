@@ -26,9 +26,6 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
-### Java template
-# Compiled class file
-*.class
 
 # Log file
 *.log
@@ -40,7 +37,6 @@ Temporary Items
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.ear
 *.zip

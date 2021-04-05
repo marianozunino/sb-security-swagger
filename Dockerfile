@@ -4,8 +4,7 @@ COPY pom.xml .
 COPY mvnw .
 COPY .mvn .mvn
 RUN ./mvnw dependency:go-offline
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} application.jar
+COPY target/*.jar application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
 
 FROM adoptopenjdk/openjdk11:alpine
