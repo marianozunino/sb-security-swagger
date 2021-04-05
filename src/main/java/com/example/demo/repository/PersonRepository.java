@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 public interface PersonRepository extends Neo4jRepository<Person, String> {
   @Query("MATCH (n:Person) where n.name='Greg' return n;")
   Person findGreg();
