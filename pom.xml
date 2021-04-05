@@ -18,6 +18,7 @@
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>11</java.version>
+        <start-class>com.example.demo.DemoApplication</start-class>
         <openapi.version>1.4.3</openapi.version>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
     </properties>
@@ -137,10 +138,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
@@ -194,8 +191,8 @@
                             <rules>
                                 <rule>
                                     <includes>
-                                        <include
-                    >com.example.demo.service</include>
+                                        <include>com.example.demo.service
+                                        </include>
                                     </includes>
                                     <element>PACKAGE</element>
                                     <limits>
@@ -214,12 +211,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <layers>
-                        <enabled>true</enabled>
-                        <includeLayerTools>true</includeLayerTools>
-                    </layers>
-                </configuration>
             </plugin>
         </plugins>
     </build>
